@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CS Round - Nuclear TigeRES vs K27</title>
+  <link rel="stylesheet" href="styles/site.css">
+</head>
+<body>
+  <main class="page">
+    <nav class="site-nav" aria-label="HLTV-style navigation">
+      <a href="#">Главная</a><a class="active" href="#">Матчи</a><a href="#">Соревнования</a><a href="#">Топы</a><a href="#">Медиа</a><a href="#">Блог</a><a href="#">Античит</a><a href="#">Помощь</a>
+    </nav>
+
+    <header class="match-header">
+      <section class="team-card" aria-label="Nuclear TigeRES">
+        <img class="team-logo" src="https://img-cdn.hltv.org/teamlogo/GcO3SLh1j8cgiNGoEXNUVS.png?ixlib=java-2.1.0&amp;s=856dc9f0ffdbeedbe76d9874fbcdb546&amp;w=50" alt="Nuclear TigeRES logo">
+        <div><div class="team-name">Nuclear TigeRES <span class="side t">T</span></div><div class="rank-line"><span class="rank-chip">HLTV #123</span><span class="rank-chip">VRS: Unranked</span></div></div>
+      </section>
+      <section class="hero-score" aria-label="Статус матча">
+        <div class="event">CyberX Celebration Championship 2025 · Grand final</div>
+        <strong>1 : 2</strong>
+        <span>Матч завершен · BO3 · выбранная карта: <b id="selected-map-name">Anubis</b></span>
+      </section>
+      <section class="team-card right" aria-label="K27">
+        <div><div class="team-name"><span class="side ct">CT</span> K27</div><div class="rank-line"><span class="rank-chip">HLTV #87</span><span class="rank-chip">VRS #206</span></div></div>
+        <img class="team-logo" src="https://img-cdn.hltv.org/teamlogo/7LmOZHYhlq-fIAm23aM2q1.png?ixlib=java-2.1.0&amp;s=e194cf9c20b306723ae899eac0e8a356&amp;w=50" alt="K27 logo">
+      </section>
+    </header>
+
+    <nav class="maps" aria-label="Карты матча">
+      <button class="map-btn" type="button" data-map="Dust2" aria-pressed="false">Dust2<small>Map 1 · Nuclear 10 : 13 K27</small></button>
+      <button class="map-btn" type="button" data-map="Inferno" aria-pressed="false">Inferno<small>Map 2 · Nuclear 13 : 5 K27</small></button>
+      <button class="map-btn" type="button" data-map="Anubis" aria-pressed="true">Anubis<small>Map 3 · Nuclear 8 : 13 K27</small></button>
+    </nav>
+
+    <section class="game" aria-label="Game log">
+      <aside class="panel" aria-labelledby="t-title">
+        <div class="side-head" id="nuclear-panel-head"><div><strong id="t-title">Nuclear TigeRES</strong></div><span class="side t" id="nuclear-map-side">T</span></div>
+        <ul class="players" id="t-players" aria-label="Nuclear TigeRES players"></ul>
+      </aside>
+
+      <div class="center">
+        <section class="panel map-stage" id="map-stage" aria-labelledby="map-title">
+          <div class="map-scorebar">
+            <span class="map-meta">Счёт по карте · <b id="map-title">Anubis</b></span>
+            <strong id="map-score">8 : 13</strong>
+            <span id="map-status">Завершен · Nuclear TigeRES vs K27</span>
+          </div>
+          <div class="map-layout">
+            <div class="tactical-map map-anubis" id="tactical-map" role="img" aria-label="Схематичная карта без вымышленных координат игроков">
+              <span class="map-label"><span id="map-layout-name">Anubis</span><span>5v5</span></span>
+              <img class="radar-image" id="radar-image" alt="" hidden>
+              <div class="map-shapes" id="map-shapes" aria-hidden="true"></div>
+              <span class="site-marker a">A</span>
+              <span class="site-marker b">B</span>
+              <span class="route one"></span>
+              <span class="route two"></span>
+              <div class="map-center-copy"><b id="map-copy-title">Anubis</b><small>Стилизованная схема карты без вымышленных координат игроков.</small></div>
+            </div>
+            <section class="kill-log" aria-label="Лог карты и убийств">
+              <h3>Лог карты / Kill log</h3>
+              <div id="map-log"></div>
+            </section>
+          </div>
+        </section>
+
+      </div>
+
+      <aside class="panel" aria-labelledby="ct-title">
+        <div class="side-head" id="k27-panel-head"><div><strong id="ct-title">K27</strong></div><span class="side ct" id="k27-map-side">CT</span></div>
+        <ul class="players" id="ct-players" aria-label="K27 players"></ul>
+      </aside>
+    </section>
+
+    <section class="panel scoreboard" aria-labelledby="scoreboard-title">
+      <div class="sb-head"><div><h2 id="scoreboard-title">Scoreboard</h2><span id="scoreboard-subtitle">Статистика выбранной карты</span></div><span>K / D · ADR · Rating</span></div>
+      <div class="stat-mode" aria-label="Режим статистики">
+        <button type="button" data-mode="map" aria-pressed="true">Карта</button>
+        <button type="button" data-mode="total" aria-pressed="false">Весь матч</button>
+      </div>
+      <div id="scoreboard-body"></div>
+    </section>
+
+    <p class="note">Scoreboard использует данные матча, карт, рангов команд и K-D/ADR/Rating с HLTV. Лог карты сделан как примерная визуализация для макета, потому что подтверждённый kill-by-kill round log не раскрыт на странице источника.</p>
+  </main>
+
+  <script src="scripts/site.js"></script>
+</body>
+</html>
