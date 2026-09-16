@@ -33,9 +33,9 @@ const fallbackAvatar = 'https://www.hltv.org/img/static/player/player_silhouette
       }
     };
     const mapMeta = {
-      Dust2: { winner:'K27', nuclearSide:'T', k27Side:'CT', score:'10 : 13' },
-      Inferno: { winner:'Nuclear TigeRES', nuclearSide:'CT', k27Side:'T', score:'13 : 5' },
-      Anubis: { winner:'K27', nuclearSide:'T', k27Side:'CT', score:'8 : 13' }
+      Dust2: { winner:'K27', nuclearSide:'T', k27Side:'CT', score:'10 : 13', halfScore:[[5, 7], [5, 6]] },
+      Inferno: { winner:'Nuclear TigeRES', nuclearSide:'CT', k27Side:'T', score:'13 : 5', halfScore:[[9, 3], [4, 2]] },
+      Anubis: { winner:'K27', nuclearSide:'T', k27Side:'CT', score:'8 : 13', halfScore:[[6, 6], [2, 7]] }
     };
     const mapBlueprints = {
       Dust2: [
@@ -131,6 +131,11 @@ const fallbackAvatar = 'https://www.hltv.org/img/static/player/player_silhouette
         <span class="log-player ${sideNameClass(item.victimSide)}">${item.victim}</span>
       </div>`;
     }
+    function renderHalfScore(halfScore) {
+      return halfScore
+        .map(([tRounds, ctRounds]) => `<span class="half-pair">(<span class="t-rounds">${tRounds}</span>:<span class="ct-rounds">${ctRounds}</span>)</span>`)
+        .join(' ');
+    }
     function renderPlayerList(target, teamName) {
       document.getElementById(target).innerHTML = players.filter((player) => player.team === teamName).map((player) => {
         const total = stats.total.rows[player.id];
@@ -176,6 +181,7 @@ const fallbackAvatar = 'https://www.hltv.org/img/static/player/player_silhouette
       document.getElementById('map-layout-name').textContent = selectedMap;
       document.getElementById('map-copy-title').textContent = selectedMap;
       document.getElementById('map-score').textContent = current.score;
+      document.getElementById('map-half-score').innerHTML = renderHalfScore(meta.halfScore);
       const tacticalMap = document.getElementById('tactical-map');
       const radarImage = document.getElementById('radar-image');
       tacticalMap.className = `tactical-map map-${selectedMap.toLowerCase()}`;
