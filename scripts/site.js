@@ -64,28 +64,70 @@ const fallbackAvatar = 'https://www.hltv.org/img/static/player/player_silhouette
     };
     const equipmentIcons = {
       ak: 'assets/equipment/ak47.svg',
+      ak47: 'assets/equipment/ak47.svg',
       awp: 'assets/equipment/awp.svg',
       galil: 'assets/equipment/galilar.svg',
-      m4: 'assets/equipment/m4a1_silencer.svg'
+      m4: 'assets/equipment/m4a1_silencer.svg',
+      m4a1s: 'assets/equipment/m4a1_silencer.svg'
     };
+    const firstRoundState = {
+      senka: { kills:1, assists:0, deaths:0, money:150, hp:100, armor:100, bomb:true, grenades:['smokegrenade.svg','flashbang.svg'] },
+      flouzer: { kills:0, assists:1, deaths:0, money:350, hp:100, armor:100, grenades:['hegrenade.svg'] },
+      k0s: { kills:0, assists:0, deaths:1, money:0, hp:100, armor:57, grenades:['molotov.svg','flashbang.svg'] },
+      h1kaN: { kills:0, assists:0, deaths:0, money:500, hp:100, armor:100, grenades:['smokegrenade.svg'] },
+      fluffy: { kills:0, assists:0, deaths:0, money:800, hp:100, armor:0, grenades:[] },
+      kashl1d: { kills:1, assists:0, deaths:0, money:100, hp:100, armor:100, grenades:['hegrenade.svg','flashbang.svg'] },
+      relaxxie: { kills:0, assists:1, deaths:0, money:300, hp:100, armor:100, grenades:['smokegrenade.svg'] },
+      xeedo: { kills:0, assists:0, deaths:1, money:0, hp:100, armor:67, grenades:['incgrenade.svg','flashbang.svg'] },
+      qw1nk1: { kills:0, assists:0, deaths:0, money:650, hp:100, armor:100, grenades:['decoy.svg'] },
+      X5G7V: { kills:0, assists:0, deaths:0, money:800, hp:100, armor:0, grenades:[] }
+    };
+    const bombCarrierByMap = { Dust2:'senka', Inferno:'kashl1d', Anubis:'senka' };
+    const primaryWeaponsByMap = {
+      Dust2: { senka:'ak47.svg', flouzer:'m4a1.svg', k0s:'awp.svg', h1kaN:'m4a1_silencer.svg', fluffy:'ak47.svg', kashl1d:'awp.svg', relaxxie:'m4a1.svg', xeedo:'m4a1_silencer.svg', qw1nk1:'ak47.svg', X5G7V:'awp.svg' },
+      Inferno: { senka:'awp.svg', flouzer:'m4a1_silencer.svg', k0s:'ak47.svg', h1kaN:'m4a1.svg', fluffy:'m4a1_silencer.svg', kashl1d:'ak47.svg', relaxxie:'awp.svg', xeedo:'m4a1.svg', qw1nk1:'m4a1_silencer.svg', X5G7V:'ak47.svg' },
+      Anubis: { senka:'m4a1_silencer.svg', flouzer:'ak47.svg', k0s:'m4a1.svg', h1kaN:'awp.svg', fluffy:'m4a1_silencer.svg', kashl1d:'ak47.svg', relaxxie:'awp.svg', xeedo:'m4a1.svg', qw1nk1:'m4a1_silencer.svg', X5G7V:'ak47.svg' }
+    };
+    const headshotIcon = 'assets/icons/headshot.png';
     const mapLogs = {
       Dust2: [
-        { type:'system', text:'Round started' },
-        { type:'kill', actor:'kashl1d', actorSide:'ct', weapon:'ak', victim:'h1kaN', victimSide:'t' },
-        { type:'kill', actor:'flouzer', actorSide:'t', weapon:'m4', victim:'relaxxie', victimSide:'ct' },
-        { type:'round', winner:'K27', winnerSide:'ct', reason:'Enemy eliminated' }
+        { type:'system', text:'Round 1 · started' },
+        { type:'kill', actor:'kashl1d', actorSide:'ct', weapon:'ak47', victim:'h1kaN', victimSide:'t', headshot:true },
+        { type:'kill', actor:'flouzer', actorSide:'t', weapon:'m4a1s', victim:'relaxxie', victimSide:'ct' },
+        { type:'round', winner:'K27', winnerSide:'ct', reason:'Enemy eliminated' },
+        { type:'system', text:'Round 2 · started' },
+        { type:'kill', actor:'kashl1d', actorSide:'ct', weapon:'awp', victim:'senka', victimSide:'t', headshot:true },
+        { type:'kill', actor:'k0s', actorSide:'t', weapon:'ak47', victim:'xeedo', victimSide:'ct' },
+        { type:'round', winner:'Nuclear TigeRES', winnerSide:'t', reason:'Bomb exploded' },
+        { type:'system', text:'Round 3 · started' },
+        { type:'kill', actor:'relaxxie', actorSide:'ct', weapon:'m4a1s', victim:'fluffy', victimSide:'t' },
+        { type:'round', winner:'K27', winnerSide:'ct', reason:'Time expired' }
       ],
       Inferno: [
-        { type:'system', text:'Round started' },
-        { type:'kill', actor:'k0s', actorSide:'t', weapon:'ak', victim:'xeedo', victimSide:'ct' },
+        { type:'system', text:'Round 1 · started' },
+        { type:'kill', actor:'k0s', actorSide:'t', weapon:'ak47', victim:'xeedo', victimSide:'ct', headshot:true },
         { type:'kill', actor:'kashl1d', actorSide:'ct', weapon:'awp', victim:'senka', victimSide:'t' },
-        { type:'round', winner:'Nuclear TigeRES', winnerSide:'t', reason:'Time expired' }
+        { type:'round', winner:'Nuclear TigeRES', winnerSide:'t', reason:'Time expired' },
+        { type:'system', text:'Round 2 · started' },
+        { type:'kill', actor:'flouzer', actorSide:'t', weapon:'m4a1s', victim:'qw1nk1', victimSide:'ct' },
+        { type:'kill', actor:'relaxxie', actorSide:'ct', weapon:'awp', victim:'h1kaN', victimSide:'t', headshot:true },
+        { type:'round', winner:'Nuclear TigeRES', winnerSide:'t', reason:'Enemy eliminated' },
+        { type:'system', text:'Round 3 · started' },
+        { type:'kill', actor:'kashl1d', actorSide:'ct', weapon:'ak47', victim:'k0s', victimSide:'t', headshot:true },
+        { type:'round', winner:'K27', winnerSide:'ct', reason:'Bomb defused' }
       ],
       Anubis: [
-        { type:'system', text:'Round started' },
-        { type:'kill', actor:'relaxxie', actorSide:'ct', weapon:'ak', victim:'h1kaN', victimSide:'t' },
-        { type:'kill', actor:'flouzer', actorSide:'t', weapon:'m4', victim:'X5G7V', victimSide:'ct' },
-        { type:'kill', actor:'xeedo', actorSide:'ct', weapon:'galil', victim:'k0s', victimSide:'t' },
+        { type:'system', text:'Round 1 · started' },
+        { type:'kill', actor:'relaxxie', actorSide:'ct', weapon:'ak47', victim:'h1kaN', victimSide:'t' },
+        { type:'kill', actor:'flouzer', actorSide:'t', weapon:'m4a1s', victim:'X5G7V', victimSide:'ct', headshot:true },
+        { type:'kill', actor:'xeedo', actorSide:'ct', weapon:'m4a1s', victim:'k0s', victimSide:'t' },
+        { type:'round', winner:'K27', winnerSide:'ct', reason:'Enemy eliminated' },
+        { type:'system', text:'Round 2 · started' },
+        { type:'kill', actor:'senka', actorSide:'t', weapon:'awp', victim:'xeedo', victimSide:'ct', headshot:true },
+        { type:'kill', actor:'kashl1d', actorSide:'ct', weapon:'m4a1s', victim:'flouzer', victimSide:'t' },
+        { type:'round', winner:'K27', winnerSide:'ct', reason:'Bomb exploded' },
+        { type:'system', text:'Round 3 · started' },
+        { type:'kill', actor:'relaxxie', actorSide:'ct', weapon:'awp', victim:'senka', victimSide:'t', headshot:true },
         { type:'round', winner:'K27', winnerSide:'ct', reason:'Enemy eliminated' }
       ]
     };
@@ -125,8 +167,9 @@ const fallbackAvatar = 'https://www.hltv.org/img/static/player/player_silhouette
       }
       return `<div class="log-item kill">
         <span class="log-player ${sideNameClass(item.actorSide)}">${item.actor}</span>
-        <span class="weapon-icon" aria-label="${item.weapon}">
+        <span class="weapon-icon" aria-label="${item.weapon}${item.headshot ? ', headshot' : ''}">
           <img src="${equipmentIcons[item.weapon]}" alt="">
+          ${item.headshot ? `<img class="headshot-icon" src="${headshotIcon}" alt="Headshot" title="Headshot">` : ''}
         </span>
         <span class="log-player ${sideNameClass(item.victimSide)}">${item.victim}</span>
       </div>`;
@@ -137,13 +180,33 @@ const fallbackAvatar = 'https://www.hltv.org/img/static/player/player_silhouette
         .join(' ');
     }
     function renderPlayerList(target, teamName) {
-      document.getElementById(target).innerHTML = players.filter((player) => player.team === teamName).map((player) => {
-        const total = stats.total.rows[player.id];
-        return `<li class="player" tabindex="0">
-          <span class="avatar"><img src="${avatarFor(player)}" alt="${player.name} avatar" onerror="this.remove(); this.parentElement.textContent='${player.name.slice(0,2).toUpperCase()}'"></span>
-          <span class="player-main"><b>${player.name}</b><small>${player.full}</small></span>
-          <span class="player-team">${player.team}</span>
-          <span class="player-popover"><strong>${player.name} · HLTV summary</strong><span class="mini-grid"><span>K-D<br><b>${total[0]}-${total[1]}</b></span><span>ADR<br><b>${total[3]}</b></span><span>Rating<br><b>${Number(total[4]).toFixed(2)}</b></span><span>Profile<br><b>${player.rank}</b></span></span></span>
+        const source = stats[selectedMap] || stats.total;
+      document.getElementById(target).innerHTML = players.filter((player) => player.team === teamName).map((player, index) => {
+        const row = source.rows[player.id] || stats.total.rows[player.id];
+        const currentSide = teamName === 'Nuclear TigeRES' ? mapMeta[selectedMap].nuclearSide : mapMeta[selectedMap].k27Side;
+        const roundState = firstRoundState[player.id] || { kills:0, assists:0, deaths:0, money:0, hp:100, armor:0, grenades:[] };
+        const hasBomb = currentSide === 'T' && bombCarrierByMap[selectedMap] === player.id;
+        const primaryWeapon = primaryWeaponsByMap[selectedMap]?.[player.id] || (currentSide === 'T' ? 'glock.svg' : 'usp_silencer.svg');
+        const utility = `${hasBomb ? '<img src="assets/equipment/c4.svg" alt="Бомба" title="Бомба">' : ''}${roundState.grenades.map((icon) => `<img src="assets/equipment/${icon}" alt="" aria-hidden="true">`).join('')}`;
+        return `<li class="player ${currentSide === 'T' ? 'player-t' : 'player-ct'}" tabindex="0">
+          <div class="player-head">
+            <span class="player-index">${index + 1}</span>
+            <b class="player-nick">${player.name}</b>
+            <span class="player-mini-stat" aria-label="Убийства"><b class="stat-letter">K</b><b>${roundState.kills}</b></span>
+            <span class="player-mini-stat" aria-label="Смерти"><b class="stat-letter">D</b><b>${roundState.deaths}</b></span>
+            <span class="player-mini-stat" aria-label="Помощь"><b class="stat-letter">A</b><b>${roundState.assists}</b></span>
+          </div>
+          <div class="player-money" aria-label="Деньги игрока">${roundState.money}</div>
+          <div class="player-vitals" aria-label="Здоровье и броня игрока">
+            <span class="vital-icon hp-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21S4 16.2 4 9.4A4.4 4.4 0 0 1 12 6a4.4 4.4 0 0 1 8 3.4C20 16.2 12 21 12 21Z"/><path d="M12 8v7M8.5 11.5h7"/></svg></span>
+            <span class="vital-value">${roundState.hp}</span>
+            <span class="vital-track" aria-hidden="true"><i style="width:${roundState.hp}%"></i></span>
+            <span class="vital-icon armor-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 3 7 3v5c0 4.5-2.7 7.9-7 10-4.3-2.1-7-5.5-7-10V6l7-3Z"/><path d="m9 12 2 2 4-4"/></svg></span>
+            <span class="vital-value">${roundState.armor}</span>
+            <span class="player-utility" aria-label="Гранаты и бомба">${utility}</span>
+            <span class="weapon-placeholder" aria-label="Основное оружие"><img src="assets/equipment/${primaryWeapon}" alt=""></span>
+          </div>
+          <span class="player-popover"><strong>${player.name} · HLTV summary</strong><span class="mini-grid"><span>K-D<br><b>${row[0]}-${row[1]}</b></span><span>ADR<br><b>${row[3]}</b></span><span>Rating<br><b>${Number(row[4]).toFixed(2)}</b></span><span>Profile<br><b>${player.rank}</b></span></span></span>
         </li>`;
       }).join('');
     }
@@ -201,6 +264,8 @@ const fallbackAvatar = 'https://www.hltv.org/img/static/player/player_silhouette
       setSideBadge('k27-map-side', meta.k27Side);
       document.getElementById('nuclear-panel-head').classList.toggle('map-winner', meta.winner === 'Nuclear TigeRES');
       document.getElementById('k27-panel-head').classList.toggle('map-winner', meta.winner === 'K27');
+      renderPlayerList('t-players', 'Nuclear TigeRES');
+      renderPlayerList('ct-players', 'K27');
       renderScoreboard();
     }
     document.querySelectorAll('.map-btn').forEach((button) => button.addEventListener('click', () => {
