@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" role="img" aria-label="CS2 News">
+  <defs><linearGradient id="g" x2="1" y2="1"><stop stop-color="#1e2633"/><stop offset="1" stop-color="#10131b"/></linearGradient></defs>
+  <rect width="800" height="420" fill="url(#g)"/><circle cx="650" cy="80" r="180" fill="#4ca8ef" opacity=".12"/><path d="M80 310 220 100h110L190 310Zm220 0 140-210h110L410 310Z" fill="#f3f4f8" opacity=".88"/><text x="570" y="350" fill="#4ca8ef" font-family="Arial" font-size="50" font-weight="700">CS2</text>
+</svg>

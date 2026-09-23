@@ -1,0 +1,15 @@
+{
+  "name": "cs2-info-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CS2 match dashboard with server-side Telegram public preview parsing",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node tests/minimap.test.js && node tests/auth-gsi.test.js && node tests/content.test.js && node tests/telegram-parser.test.js"
+  },
+  "dependencies": {
+    "axios": "^1.12.2",
+    "cheerio": "^1.1.2"
+  }
+}

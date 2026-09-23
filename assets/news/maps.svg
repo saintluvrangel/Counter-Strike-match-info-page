@@ -1,0 +1,3 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" role="img" aria-label="Карты CS2">
+  <rect width="800" height="420" fill="#11151d"/><g fill="none" stroke="#70798b" stroke-width="12"><path d="M100 95h190v75h90v130H210v55H80V230h70Z"/><path d="M470 70h220v105h-70v80h105v100H500v-70h-80V145h50Z"/></g><circle cx="240" cy="250" r="32" fill="#f0b23e"/><circle cx="575" cy="145" r="32" fill="#4ca8ef"/><text x="228" y="261" fill="#17130a" font-family="Arial" font-size="30" font-weight="700">A</text><text x="563" y="156" fill="#071521" font-family="Arial" font-size="30" font-weight="700">B</text>
+</svg>

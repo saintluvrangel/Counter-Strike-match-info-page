@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" role="img" aria-label="Турнирный финал">
+  <defs><linearGradient id="g" x2="1" y2="1"><stop stop-color="#18273a"/><stop offset="1" stop-color="#101119"/></linearGradient></defs>
+  <rect width="800" height="420" fill="url(#g)"/><path d="M310 70h180v45c0 95-35 160-90 190-55-30-90-95-90-190Z" fill="#f0b23e" opacity=".9"/><path d="M310 100H205c0 85 42 120 116 126M490 100h105c0 85-42 120-116 126" fill="none" stroke="#f3f4f8" stroke-width="18"/><rect x="335" y="310" width="130" height="24" rx="6" fill="#f3f4f8"/><text x="45" y="372" fill="#f3f4f8" font-family="Arial" font-size="34" font-weight="700">GRAND FINAL</text>
+</svg>
