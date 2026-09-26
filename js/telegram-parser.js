@@ -31,12 +31,20 @@ function textWithLineBreaks($, element) {
   return copy.text().replace(/\u00a0/g, ' ').replace(/\n{3,}/g, '\n\n').trim();
 }
 
-function imageFromPost($, postElement) {
-  const imageElement = postElement.find('.tgme_widget_message_photo_wrap, .tgme_widget_message_video_thumb').first();
-  const style = imageElement.attr('style') || '';
-  const styleMatch = style.match(/background-image\s*:\s*url\((['"]?)(.*?)\1\)/i);
-  if (styleMatch?.[2]) return styleMatch[2].replace(/&amp;/g, '&');
-  return postElement.find('img').first().attr('src') || null;
+function imagesFromPost($, postElement) {
+  const imageUrls = [];
+  const add = (value) => {
+    const url = String(value || '').replace(/&amp;/g, '&').trim();
+    if (url && !imageUrls.includes(url)) imageUrls.push(url);
+  };
+
+  postElement.find('.tgme_widget_message_photo_wrap, .tgme_widget_message_video_thumb').each((_, element) => {
+    const style = $(element).attr('style') || '';
+    const styleMatch = style.match(/background-image\s*:\s*url\((['"]?)(.*?)\1\)/i);
+    if (styleMatch?.[2]) add(styleMatch[2]);
+  });
+  postElement.find('.tgme_widget_message_photo_wrap img, .tgme_widget_message_video_thumb img, .tgme_widget_message_photo img').each((_, element) => add($(element).attr('src')));
+  return imageUrls;
 }
 
 // Чистая функция оставлена отдельно, чтобы HTML можно было проверять без сетевых запросов.
@@ -55,13 +63,14 @@ function parseTelegramHtml(html, { channelName, messageId }) {
   const textElement = postElement.find('.tgme_widget_message_text').first();
   const content = textElement.length ? textWithLineBreaks($, textElement) : '';
   const publishedAt = postElement.find('time').first().attr('datetime') || new Date().toISOString();
-  const imageUrl = imageFromPost($, postElement);
+  const imageUrls = imagesFromPost($, postElement);
   const title = (content.split('\n').find(Boolean) || `Новость из Telegram #${messageId}`).slice(0, 100);
 
   return {
     title,
     content,
-    imageUrl,
+    imageUrl:imageUrls[0] || null,
+    imageUrls,
     publishedAt,
     source:`https://t.me/${channelName}/${messageId}`,
     channel:channelName,

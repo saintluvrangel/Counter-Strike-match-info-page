@@ -53,6 +53,7 @@
 
     (Array.isArray(players) ? players : []).forEach((player) => {
       if (!player || !player.id || !player.position) return;
+      if (player.side !== 'T' && player.side !== 'CT') return;
 
       const x = Number(player.position.x);
       const y = Number(player.position.y);
@@ -61,10 +62,13 @@
       playersById.set(String(player.id), {
         id: String(player.id),
         nick: player.nick ? String(player.nick) : String(player.id),
-        side: player.side === 'CT' ? 'CT' : 'T',
+        side: player.side,
         number: Number.isFinite(Number(player.number)) ? Number(player.number) : 0,
         weapon: player.weapon ? String(player.weapon) : '',
         weaponUrl: player.weaponUrl ? String(player.weaponUrl) : '',
+        health: player.health != null && Number.isFinite(Number(player.health)) ? clamp(Number(player.health), 0, 100) : null,
+        heading: Number.isFinite(Number(player.heading)) ? Number(player.heading) : 0,
+        alive: player.alive !== false,
         position: { x, y }
       });
     });
@@ -73,6 +77,8 @@
   }
 
   function interpolateRoute(route, progress) {
+    if (!Array.isArray(route) || !route.length) return { x:.5, y:.5 };
+    if (route.length === 1) return { x:route[0][0], y:route[0][1] };
     const bounded = clamp(progress, 0, 1);
     const segmentCount = route.length - 1;
     const segmentPosition = bounded * segmentCount;
@@ -80,8 +86,8 @@
     const localProgress = segmentPosition - segmentIndex;
     const start = route[segmentIndex];
     const end = route[segmentIndex + 1];
-
     return {
+      // Прямая интерполяция не создаёт кривые, срезающие стены и проходящие через пустые зоны.
       x: start[0] + (end[0] - start[0]) * localProgress,
       y: start[1] + (end[1] - start[1]) * localProgress
     };
@@ -170,9 +176,11 @@
       if (!snapshot || !snapshot.mapName || snapshot.mapName !== this.mapName) return;
 
       const activeIds = new Set();
-      normalizePlayers(snapshot.players).forEach((player) => {
+      const players = normalizePlayers(snapshot.players);
+      const recentDamage = Array.isArray(snapshot.recentDamage) ? snapshot.recentDamage : [];
+      players.forEach((player) => {
         activeIds.add(player.id);
-        this.renderPlayer(player);
+        this.renderPlayer(player, recentDamage.filter((event) => event.targetId === player.id));
       });
 
       this.markers.forEach((marker, playerId) => {
@@ -183,7 +191,7 @@
       });
     }
 
-    renderPlayer(player) {
+    renderPlayer(player, recentDamage = []) {
       const radarPosition = worldToRadar(this.mapName, player.position);
       let marker = this.markers.get(player.id);
 
@@ -193,19 +201,50 @@
         this.layer.appendChild(marker);
       }
 
-      marker.className = `map-player side-${player.side.toLowerCase()}`;
+      marker.className = `map-player side-${player.side.toLowerCase()}${player.alive ? '' : ' is-dead'}`;
+      marker.dataset.playerId = player.id;
       marker.hidden = !radarPosition.visible;
       marker.style.left = `${clamp(radarPosition.x, 0, 1) * 100}%`;
       marker.style.top = `${clamp(radarPosition.y, 0, 1) * 100}%`;
-      marker.querySelector('.map-player-dot').textContent = player.number || '';
+      const dot = marker.querySelector('.map-player-dot');
+      dot.querySelector('.map-player-number').textContent = player.number || '';
+      dot.setAttribute('aria-pressed', String(marker.dataset.selected === 'true'));
+      dot.setAttribute('aria-label', `${player.side}, ${player.nick}${player.weapon ? `, ${player.weapon}` : ''}${player.alive ? '' : ', выбыл'}`);
+      marker.querySelector('.map-player-arrow').style.setProperty('--heading', `${player.heading}deg`);
       marker.querySelector('.map-player-side').textContent = player.side;
       marker.querySelector('.map-player-nick').textContent = player.nick;
+      const health = marker.querySelector('.map-player-health');
+      if (player.health === null) {
+        health.hidden = true;
+      } else {
+        health.hidden = false;
+        health.querySelector('b').textContent = `${Math.round(player.health)} HP`;
+        health.querySelector('i').style.width = `${player.health}%`;
+        health.dataset.level = player.health <= 30 ? 'low' : player.health <= 65 ? 'medium' : 'high';
+        health.setAttribute('aria-label', `Здоровье: ${Math.round(player.health)} из 100`);
+      }
+      const damageLayer = marker.querySelector('.map-player-damage');
+      const visibleDamage = new Set(recentDamage.map((event) => String(event.id)));
+      damageLayer.querySelectorAll('.map-damage-number').forEach((popup) => {
+        if (!visibleDamage.has(popup.dataset.damageId)) popup.remove();
+      });
+      recentDamage.forEach((event) => {
+        const id = String(event.id);
+        let popup = [...damageLayer.children].find((item) => item.dataset.damageId === id);
+        if (!popup) {
+          popup = document.createElement('span');
+          popup.className = 'map-damage-number';
+          popup.dataset.damageId = id;
+          popup.setAttribute('aria-label', `Получено урона: ${event.damage}`);
+          damageLayer.appendChild(popup);
+        }
+        popup.textContent = `−${event.damage}`;
+      });
 
       const weaponImage = marker.querySelector('.map-player-weapon');
       weaponImage.hidden = !player.weaponUrl;
       weaponImage.src = player.weaponUrl || '';
       weaponImage.alt = player.weapon ? `Оружие: ${player.weapon}` : '';
-      marker.setAttribute('aria-label', `${player.side}, ${player.nick}${player.weapon ? `, ${player.weapon}` : ''}`);
     }
 
     createMarker(player) {
@@ -213,11 +252,15 @@
       marker.className = `map-player side-${player.side.toLowerCase()}`;
       marker.setAttribute('role', 'listitem');
       marker.innerHTML = `
-        <span class="map-player-dot" aria-hidden="true"></span>
+        <img class="map-player-weapon" alt="">
+        <span class="map-player-arrow" aria-hidden="true"></span>
+        <button class="map-player-dot" type="button" aria-pressed="false"><span class="map-player-number"></span></button>
+        <span class="map-player-health" hidden><b></b><i></i></span>
+        <span class="map-player-damage" aria-live="polite"></span>
         <span class="map-player-label">
           <span class="map-player-side"></span>
           <b class="map-player-nick"></b>
-          <img class="map-player-weapon" alt="">
+
         </span>`;
       return marker;
     }
@@ -249,6 +292,13 @@
       this.markers.clear();
     }
 
+    selectPlayer(playerId) {
+      this.markers.forEach((marker, id) => {
+        marker.dataset.selected = String(id === playerId);
+        marker.querySelector('.map-player-dot')?.setAttribute('aria-pressed', String(id === playerId));
+      });
+    }
+
     destroy() {
       this.disconnect();
       this.clear();
@@ -263,6 +313,7 @@
     MockMinimapSource,
     normalizePlayers,
     radarToWorld,
-    worldToRadar
+    worldToRadar,
+    interpolateRoute
   };
 });

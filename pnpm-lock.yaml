@@ -8,14 +8,88 @@ importers:
 
   .:
     dependencies:
+      '@laihoe/demoparser2':
+        specifier: 0.42.0
+        version: 0.42.0
       axios:
         specifier: ^1.12.2
         version: 1.20.0(debug@4.4.3)
       cheerio:
         specifier: ^1.1.2
         version: 1.2.0
+      unzipper:
+        specifier: 0.12.5
+        version: 0.12.5
 
 packages:
+
+  '@laihoe/demoparser2-android-arm-eabi@0.42.0':
+    resolution: {integrity: sha512-FMNCMu7vtCPEqE9/yMOlZLKd5DEvnK9O6zPK8m2R0Vxma4sVeNMNqaox99Z9uAEuDh9HUTSNxhu2b8d4U0cAfQ==}
+    engines: {node: '>= 10'}
+    cpu: [arm]
+    os: [android]
+
+  '@laihoe/demoparser2-android-arm64@0.42.0':
+    resolution: {integrity: sha512-zaHWPD581v46lTWUHcl379yjHW/x+1GFf/iU7OlWUWUkoblQlsFRE+WC9qYtrNrz8vO9HD+YNkNxGFAnhzmXmQ==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [android]
+
+  '@laihoe/demoparser2-darwin-arm64@0.42.0':
+    resolution: {integrity: sha512-vZGlPcnYVb75LsitDSBdNkp+g1gZxyHAQxhdowRR452BGQITwEMrRaGP9efo7oId78nX9KjfSy6kjaCiU070PQ==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@laihoe/demoparser2-linux-arm-gnueabihf@0.42.0':
+    resolution: {integrity: sha512-Md9rioYT6Hb7Jr2Ob+0VZGFs5w9kD3iRd9Lh0lYvBdIGwG94KwNkmINQI79FtCf5WC0kAiQsXIRakiZM49Fh4Q==}
+    engines: {node: '>= 10'}
+    cpu: [arm]
+    os: [linux]
+
+  '@laihoe/demoparser2-linux-arm64-gnu@0.42.0':
+    resolution: {integrity: sha512-Ng3TfUXqhjBufjU+8CaVoc2MxthaABS3gkZPfbZVb/UBdA74HguVuzmeioNYDa4mJkN3oau4FcXxoxQd9jkD9A==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
+
+  '@laihoe/demoparser2-linux-arm64-musl@0.42.0':
+    resolution: {integrity: sha512-mV1HWvUw7H/9NCS6AfgNEzAxKunyDsxG2e+CtBo57ArzIYvpKWVO8nMtf9UH1XTciHHelpji9VqWwusP3ZbfPg==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [musl]
+
+  '@laihoe/demoparser2-linux-x64-gnu@0.42.0':
+    resolution: {integrity: sha512-mhU7QEZuwXKEYH5Kx0O2R3zd2zWT5XdTzBLpfUwo7bDPhZVgP3n4p7GU6IAf2ckN+zmX4tn8N93fyPTi0hiTSw==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
+
+  '@laihoe/demoparser2-linux-x64-musl@0.42.0':
+    resolution: {integrity: sha512-8MSt652uyVFoXvEZbXRY1Nesc9IDol6o8rO5unEX7X7mPTRyFkj2lu+XnPOY8r0KvY8a/jkvwuqmHtNH3ojQQA==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [linux]
+    libc: [musl]
+
+  '@laihoe/demoparser2-win32-arm64-msvc@0.42.0':
+    resolution: {integrity: sha512-q4o/Z5XKhURus4AZ8L9EHTaV9JfXICeUnGdCuXrhXkqLrYCOroxy6zxL3r4QD9p55XwWVY59Kh6tICj7PdfJDQ==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [win32]
+
+  '@laihoe/demoparser2-win32-x64-msvc@0.42.0':
+    resolution: {integrity: sha512-6qLCtvtrB/rRoqWm9aFFT77B87LPkDoMQXmkch/2QTJreYaszi0sULiQNMNStQWhnJhs2CuBWkaoleUO+3It5A==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [win32]
+
+  '@laihoe/demoparser2@0.42.0':
+    resolution: {integrity: sha512-W1O/7RxKIum/HdUqXnpW/33tfiuVC4qVMQwJjMOklAr9AsxGkf5Tn7MzT3hOQ8QsTCB6M6bBYxxRMnodbeF4lw==}
+    engines: {node: '>= 10'}
 
   agent-base@6.0.2:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
@@ -26,6 +100,9 @@ packages:
 
   axios@1.20.0:
     resolution: {integrity: sha512-r8aOh8j9cGKpgQAqpzrUHnSIc6a59Y3Xf/cv8sy1DrHCkZHzQGEuoq1tARk6qSyDdtQGSDgpb9kFlruzPvrgwg==}
+
+  bluebird@3.7.2:
+    resolution: {integrity: sha512-XpNj6GDQzdfW+r2Wnn7xiSAd7TM3jzkxGXBGTtWKuSXv1xUV+azxAm8jdWZN06QTQk+2N2XB9jRDkvbmQmcRtg==}
 
   boolbase@1.0.0:
     resolution: {integrity: sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==}
@@ -44,6 +121,9 @@ packages:
   combined-stream@1.0.8:
     resolution: {integrity: sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==}
     engines: {node: '>= 0.8'}
+
+  core-util-is@1.0.3:
+    resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==}
 
   css-select@5.2.2:
     resolution: {integrity: sha512-TizTzUddG/xYLA3NXodFM0fSbNizXjOKhqiQQwvhlspadZokn1KDy0NZFS0wuEubIYAV5/c1/lAr0TaaFXEXzw==}
@@ -81,6 +161,9 @@ packages:
   dunder-proto@1.0.1:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
     engines: {node: '>= 0.4'}
+
+  duplexer2@0.1.4:
+    resolution: {integrity: sha512-asLFVfWWtJ90ZyOUHMqk7/S2w2guQKxUI2itj3d92ADHhxUSbCMGi1f1cBcJ7xM1To+pE/Khbwo1yuNbMEPKeA==}
 
   encoding-sniffer@0.2.1:
     resolution: {integrity: sha512-5gvq20T6vfpekVtqrYQsSCFZ1wEg5+wW0/QaZMWkFr6BqD3NfKs0rLCx4rrVlSWJeZb5NBJgVLswK/w2MWU+Gw==}
@@ -126,6 +209,10 @@ packages:
     resolution: {integrity: sha512-vKatAh4SlVfgbv+YtmhiRjhEMJsYpsG1Y2rMQtR+SVSbytsSD1YGzDIcrAJmdFec88u/+VoGmxnl+80gL1tRCQ==}
     engines: {node: '>= 6'}
 
+  fs-extra@11.3.1:
+    resolution: {integrity: sha512-eXvGGwZ5CL17ZSwHWd3bbgk7UUpF6IFHtP57NYYakPvHOs8GDgDe5KJI36jIJzDkJ6eJjuzRA8eBQb6SkKue0g==}
+    engines: {node: '>=14.14'}
+
   function-bind@1.1.2:
     resolution: {integrity: sha512-7XHNxH7qX9xG5mIwxkhumTox/MIRNcOgDrxWsMt2pAr23WHp6MrRlN7FBSFpCpr+oVO0F744iUgR82nJMfG2SA==}
 
@@ -140,6 +227,9 @@ packages:
   gopd@1.2.0:
     resolution: {integrity: sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg==}
     engines: {node: '>= 0.4'}
+
+  graceful-fs@4.2.11:
+    resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
 
   has-symbols@1.1.0:
     resolution: {integrity: sha512-1cDNdwJ2Jaohmb3sg4OmKaMBwuC48sYni5HUw2DvsC8LjGTLK9h+eb1X6RyuOHe4hT0ULCW68iomhjUoKUqlPQ==}
@@ -164,6 +254,15 @@ packages:
     resolution: {integrity: sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==}
     engines: {node: '>=0.10.0'}
 
+  inherits@2.0.4:
+    resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
+
+  isarray@1.0.0:
+    resolution: {integrity: sha512-VLghIWNM6ELQzo7zwmcg0NmTVyWKYjvIeM83yjp0wRDTmUnrM678fQbcKBo6n2CJEF0szoG//ytg+TKla89ALQ==}
+
+  jsonfile@6.2.1:
+    resolution: {integrity: sha512-zwOTdL3rFQ/lRdBnntKVOX6k5cKJwEc1HdilT71BWEu7J41gXIB2MRp+vxduPSwZJPWBxEzv4yH1wYLJGUHX4Q==}
+
   math-intrinsics@1.1.0:
     resolution: {integrity: sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==}
     engines: {node: '>= 0.4'}
@@ -179,6 +278,9 @@ packages:
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
+  node-int64@0.4.0:
+    resolution: {integrity: sha512-O5lz91xSOeoXP6DulyHfllpq+Eg00MWitZIbtPfoSEvqIHdl5gfcY6hYzDWnj0qD5tz52PI08u9qUvSVeUBeHw==}
+
   nth-check@2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
 
@@ -191,16 +293,38 @@ packages:
   parse5@7.3.0:
     resolution: {integrity: sha512-IInvU7fabl34qmi9gY8XOVxhYyMyuH2xUNpb2q8/Y+7552KlejkRvqvD19nMoUW/uQGGbqNpA6Tufu5FL5BZgw==}
 
+  process-nextick-args@2.0.1:
+    resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}
+
   proxy-from-env@2.1.0:
     resolution: {integrity: sha512-cJ+oHTW1VAEa8cJslgmUZrc+sjRKgAKl3Zyse6+PV38hZe/V6Z14TbCuXcan9F9ghlz4QrFr2c92TNF82UkYHA==}
     engines: {node: '>=10'}
 
+  readable-stream@2.3.8:
+    resolution: {integrity: sha512-8p0AUk4XODgIewSi0l8Epjs+EVnWiK7NoDIEGU0HhE7+ZyY8D1IMY7odu5lRrFXGg71L15KG8QrPmum45RTtdA==}
+
+  safe-buffer@5.1.2:
+    resolution: {integrity: sha512-Gd2UZBJDkXlY7GbJxfsE8/nvKkUEU1G38c1siN6QP6a9PT9MmHB8GnpscSmMJSoF8LOIrt8ud/wPtojys4G6+g==}
+
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
+
+  string_decoder@1.1.1:
+    resolution: {integrity: sha512-n/ShnvDi6FHbbVfviro+WojiFzv+s8MPMHBczVePfUpDJLwoLT0ht1l4YwBCbi8pJAveEEdnkHyPyTP/mzRfwg==}
 
   undici@7.29.1:
     resolution: {integrity: sha512-RYONW2MeafgYlkVOKYKkA/Ag7BmXqgIWCa8t1m0JcxrQg9pI9lEqRhAOruOBCbAohOa/gkCF+iPi9hrgvTzu6Q==}
     engines: {node: '>=20.18.1'}
+
+  universalify@2.0.1:
+    resolution: {integrity: sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw==}
+    engines: {node: '>= 10.0.0'}
+
+  unzipper@0.12.5:
+    resolution: {integrity: sha512-tXYOi9R57Uj/2Z25SOs5RRSzq886MBQj2gY8dPL+xl/kv6s6SvByoKfAtvfVeEuhntWDgjd2o9p2lb4TVPAz0A==}
+
+  util-deprecate@1.0.2:
+    resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
   whatwg-encoding@3.1.1:
     resolution: {integrity: sha512-6qN4hJdMwfYBtE3YBTTHhoeuUrDBPZmbQaxWAqSALV/MeEnR5z1xd8UKud2RAkFoPkmB+hli1TZSnyi84xz1vQ==}
@@ -212,6 +336,49 @@ packages:
     engines: {node: '>=18'}
 
 snapshots:
+
+  '@laihoe/demoparser2-android-arm-eabi@0.42.0':
+    optional: true
+
+  '@laihoe/demoparser2-android-arm64@0.42.0':
+    optional: true
+
+  '@laihoe/demoparser2-darwin-arm64@0.42.0':
+    optional: true
+
+  '@laihoe/demoparser2-linux-arm-gnueabihf@0.42.0':
+    optional: true
+
+  '@laihoe/demoparser2-linux-arm64-gnu@0.42.0':
+    optional: true
+
+  '@laihoe/demoparser2-linux-arm64-musl@0.42.0':
+    optional: true
+
+  '@laihoe/demoparser2-linux-x64-gnu@0.42.0':
+    optional: true
+
+  '@laihoe/demoparser2-linux-x64-musl@0.42.0':
+    optional: true
+
+  '@laihoe/demoparser2-win32-arm64-msvc@0.42.0':
+    optional: true
+
+  '@laihoe/demoparser2-win32-x64-msvc@0.42.0':
+    optional: true
+
+  '@laihoe/demoparser2@0.42.0':
+    optionalDependencies:
+      '@laihoe/demoparser2-android-arm-eabi': 0.42.0
+      '@laihoe/demoparser2-android-arm64': 0.42.0
+      '@laihoe/demoparser2-darwin-arm64': 0.42.0
+      '@laihoe/demoparser2-linux-arm-gnueabihf': 0.42.0
+      '@laihoe/demoparser2-linux-arm64-gnu': 0.42.0
+      '@laihoe/demoparser2-linux-arm64-musl': 0.42.0
+      '@laihoe/demoparser2-linux-x64-gnu': 0.42.0
+      '@laihoe/demoparser2-linux-x64-musl': 0.42.0
+      '@laihoe/demoparser2-win32-arm64-msvc': 0.42.0
+      '@laihoe/demoparser2-win32-x64-msvc': 0.42.0
 
   agent-base@6.0.2:
     dependencies:
@@ -230,6 +397,8 @@ snapshots:
     transitivePeerDependencies:
       - debug
       - supports-color
+
+  bluebird@3.7.2: {}
 
   boolbase@1.0.0: {}
 
@@ -264,6 +433,8 @@ snapshots:
   combined-stream@1.0.8:
     dependencies:
       delayed-stream: 1.0.0
+
+  core-util-is@1.0.3: {}
 
   css-select@5.2.2:
     dependencies:
@@ -305,6 +476,10 @@ snapshots:
       es-errors: 1.3.0
       gopd: 1.2.0
 
+  duplexer2@0.1.4:
+    dependencies:
+      readable-stream: 2.3.8
+
   encoding-sniffer@0.2.1:
     dependencies:
       iconv-lite: 0.6.3
@@ -343,6 +518,12 @@ snapshots:
       hasown: 2.0.4
       mime-types: 2.1.35
 
+  fs-extra@11.3.1:
+    dependencies:
+      graceful-fs: 4.2.11
+      jsonfile: 6.2.1
+      universalify: 2.0.1
+
   function-bind@1.1.2: {}
 
   get-intrinsic@1.3.0:
@@ -364,6 +545,8 @@ snapshots:
       es-object-atoms: 1.1.2
 
   gopd@1.2.0: {}
+
+  graceful-fs@4.2.11: {}
 
   has-symbols@1.1.0: {}
 
@@ -393,6 +576,16 @@ snapshots:
     dependencies:
       safer-buffer: 2.1.2
 
+  inherits@2.0.4: {}
+
+  isarray@1.0.0: {}
+
+  jsonfile@6.2.1:
+    dependencies:
+      universalify: 2.0.1
+    optionalDependencies:
+      graceful-fs: 4.2.11
+
   math-intrinsics@1.1.0: {}
 
   mime-db@1.52.0: {}
@@ -402,6 +595,8 @@ snapshots:
       mime-db: 1.52.0
 
   ms@2.1.3: {}
+
+  node-int64@0.4.0: {}
 
   nth-check@2.1.1:
     dependencies:
@@ -420,11 +615,41 @@ snapshots:
     dependencies:
       entities: 6.0.1
 
+  process-nextick-args@2.0.1: {}
+
   proxy-from-env@2.1.0: {}
+
+  readable-stream@2.3.8:
+    dependencies:
+      core-util-is: 1.0.3
+      inherits: 2.0.4
+      isarray: 1.0.0
+      process-nextick-args: 2.0.1
+      safe-buffer: 5.1.2
+      string_decoder: 1.1.1
+      util-deprecate: 1.0.2
+
+  safe-buffer@5.1.2: {}
 
   safer-buffer@2.1.2: {}
 
+  string_decoder@1.1.1:
+    dependencies:
+      safe-buffer: 5.1.2
+
   undici@7.29.1: {}
+
+  universalify@2.0.1: {}
+
+  unzipper@0.12.5:
+    dependencies:
+      bluebird: 3.7.2
+      duplexer2: 0.1.4
+      fs-extra: 11.3.1
+      graceful-fs: 4.2.11
+      node-int64: 0.4.0
+
+  util-deprecate@1.0.2: {}
 
   whatwg-encoding@3.1.1:
     dependencies:

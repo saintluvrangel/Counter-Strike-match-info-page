@@ -19,6 +19,13 @@ function createStorage() {
   assert.deepEqual(root, { id:'user-root', email:'root@cs2.com', role:'root' });
   assert.equal(Object.hasOwn(root, 'password'), false);
 
+  const registered = await AuthApi.registerUser(' New.User@example.com ', 'secure-pass-8', storage);
+  assert.deepEqual(registered, { id:registered.id, email:'new.user@example.com', role:'user' });
+  assert.equal((await AuthApi.login('new.user@example.com', 'secure-pass-8', storage)).id, registered.id);
+  await assert.rejects(() => AuthApi.registerUser('new.user@example.com', 'secure-pass-8', storage), /уже зарегистрирован/);
+  await assert.rejects(() => AuthApi.registerUser('bad-email', 'secure-pass-8', storage), /корректный email/);
+  await assert.rejects(() => AuthApi.registerUser('valid@example.com', 'short', storage), /8 символов/);
+
   AuthApi.writeSession(storage, root);
   assert.deepEqual(AuthApi.readSession(storage), root);
   AuthApi.clearSession(storage);

@@ -10,20 +10,30 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <!-- Login screen is controlled by js/auth.js -->
-  <section class="login-screen" id="login-screen" aria-labelledby="login-title">
+  <div class="preview-banner" id="preview-banner" hidden>Режим просмотра как пользователь · <button id="exit-preview" type="button">Выйти из режима</button></div>
+  <section class="login-screen" id="login-screen" aria-labelledby="login-title" hidden>
     <div class="login-card">
-      <div class="login-brand" aria-hidden="true">CS2<span>DATA</span></div>
-      <span class="eyebrow">Secure dashboard</span>
-      <h1 id="login-title">Вход в систему</h1>
-      <p>Авторизуйтесь, чтобы открыть матчи и аналитику.</p>
-      <form class="login-form" id="login-form" novalidate>
-        <label for="login-email">Логин (Email)</label>
+      <button class="modal-close auth-close" id="close-auth" type="button" aria-label="Закрыть">×</button>
+      <span class="eyebrow">Личный кабинет</span>
+      <h1 id="login-title">Авторизация</h1>
+      <div class="auth-tabs" role="tablist" aria-label="Авторизация или регистрация">
+        <button id="auth-login-tab" type="button" role="tab" aria-selected="true" aria-controls="login-form" data-auth-tab="login">Вход</button>
+        <button id="auth-register-tab" type="button" role="tab" aria-selected="false" aria-controls="register-form" data-auth-tab="register">Регистрация</button>
+      </div>
+      <form class="login-form" id="login-form" role="tabpanel" aria-labelledby="auth-login-tab" novalidate>
+        <h2>Вход</h2>
+        <label for="login-email">Email</label>
         <input id="login-email" name="email" type="email" autocomplete="username" required placeholder="name@cs2.com">
         <label for="login-password">Пароль</label>
         <input id="login-password" name="password" type="password" autocomplete="current-password" required placeholder="Введите пароль">
         <p class="form-error" id="login-error" role="alert" hidden></p>
         <button class="primary-button" type="submit">Войти</button>
+      </form>
+      <form class="login-form" id="register-form" role="tabpanel" aria-labelledby="auth-register-tab" novalidate hidden>
+        <h2>Регистрация</h2><label for="register-email">Email</label><input id="register-email" name="email" type="email" autocomplete="email" required>
+        <label for="register-password">Пароль (не менее 8 символов)</label><input id="register-password" name="password" type="password" autocomplete="new-password" minlength="8" required>
+        <label for="register-confirm">Подтверждение пароля</label><input id="register-confirm" name="confirm" type="password" autocomplete="new-password" required>
+        <p class="form-error" id="register-error" role="alert" hidden></p><button class="primary-button" type="submit">Создать аккаунт</button>
       </form>
       <details class="demo-accounts">
         <summary>Тестовые аккаунты</summary>
@@ -34,20 +44,25 @@
     </div>
   </section>
 
-  <main class="page" id="app-shell" hidden>
+  <main class="page" id="app-shell">
     <h1 class="sr-only">CS2 match dashboard: Nuclear TigeRES vs K27</h1>
 
     <!-- Navigation and user menu are rendered dynamically from RBAC rules. -->
     <header class="app-header">
-      <a class="app-brand" href="#matches" aria-label="CS2 Data — матчи">CS2<span>DATA</span></a>
+      <a class="app-brand" href="#home" aria-label="CS2 Data — главная">CS2<span>DATA</span></a>
       <nav class="site-nav" id="site-nav" aria-label="Основная навигация"></nav>
       <div class="user-menu">
-        <span class="user-avatar" id="user-avatar" aria-hidden="true"></span>
-        <span class="user-identity"><strong id="user-email"></strong><small id="user-role"></small></span>
-        <button class="edit-button" id="edit-data-button" type="button" hidden>Редактировать</button>
-        <button class="logout-button" id="logout-button" type="button">Выйти</button>
+        <div class="guest-auth-actions" id="guest-auth-actions"><button class="header-auth-button accent" id="show-auth" type="button">Авторизация / регистрация</button></div>
+        <div class="signed-auth-actions" id="signed-auth-actions" hidden><span class="user-avatar" id="user-avatar" aria-hidden="true"></span><span class="user-identity"><strong id="user-email"></strong><small id="user-role"></small></span><button class="header-auth-button admin-only" id="preview-button" type="button" aria-label="Открыть сайт как пользователь">👁</button><button class="logout-button" id="logout-button" type="button">Выйти</button></div>
+        <button class="edit-button admin-only" id="edit-data-button" type="button" hidden>Редактировать</button>
       </div>
     </header>
+
+    <section class="app-view home-view" id="home-view" aria-labelledby="home-title" hidden>
+      <header class="view-hero"><div><span class="eyebrow">CS2 dashboard</span><h2 id="home-title">Главная</h2><p>Последние матчи и новости киберспорта.</p></div></header>
+      <section class="landing-section"><header class="landing-heading"><h2>Матчи</h2><a href="#matches" class="landing-more" data-switch-tab="matches">Больше матчей →</a></header><div class="matches-grid" id="home-matches-grid"></div></section>
+      <section class="landing-section"><header class="landing-heading"><h2>Новости</h2><a href="#news" class="landing-more" data-switch-tab="news">Все новости →</a></header><div class="news-grid" id="home-news-grid"></div></section>
+    </section>
 
     <!-- Matches catalog -->
     <section class="app-view matches-view" id="matches-view" aria-labelledby="matches-title" hidden>
@@ -64,13 +79,15 @@
       <a class="back-link" href="#matches">← Назад к матчам</a>
       <span id="detail-match-context">Детальный дашборд</span>
     </div>
+    <div class="match-analytics-toolbar">
+      <button class="analytics-toggle" id="analytics-toggle" type="button" aria-expanded="false" aria-controls="match-analytics-panel">Аналитика</button>
+    </div>
     <header class="match-header">
       <section class="team-card" id="team-a-card" aria-label="Nuclear TigeRES">
         <img class="team-logo" id="team-a-logo" src="https://img-cdn.hltv.org/teamlogo/GcO3SLh1j8cgiNGoEXNUVS.png?ixlib=java-2.1.0&amp;s=856dc9f0ffdbeedbe76d9874fbcdb546&amp;w=50" alt="Nuclear TigeRES logo">
         <div><div class="team-name" id="team-a-name">Nuclear TigeRES</div><div class="rank-line" id="team-a-ranks"><span class="rank-chip">HLTV #123</span><span class="rank-chip">VRS: Unranked</span></div></div>
       </section>
       <section class="hero-score" aria-label="Статус матча">
-        <button class="analytics-toggle" id="analytics-toggle" type="button" aria-expanded="false" aria-controls="match-analytics-panel">Аналитика</button>
         <div class="event">CyberX Celebration Championship 2025 · Grand final</div>
         <strong id="series-score">1 : 2</strong>
         <span id="series-status">Матч завершен · BO3 · выбранная карта: <b id="selected-map-name">Anubis</b></span>
@@ -119,19 +136,38 @@
           <div class="map-layout">
             <div class="tactical-map map-anubis" id="tactical-map" role="group" aria-label="Миникарта с позициями игроков">
               <span class="map-label"><span id="map-layout-name">Anubis</span><span>5v5</span><span class="map-live-state" id="map-live-state">Mock live</span></span>
-              <img class="radar-image" id="radar-image" alt="" hidden>
-              <div class="player-layer" id="player-layer" role="list" aria-label="Позиции игроков на карте"></div>
-              <div class="map-shapes" id="map-shapes" aria-hidden="true"></div>
-              <span class="site-marker a">A</span>
-              <span class="site-marker b">B</span>
-              <span class="route one"></span>
-              <span class="route two"></span>
-              <div class="map-center-copy"><b id="map-copy-title">Anubis</b><small>Стилизованная схема карты без вымышленных координат игроков.</small></div>
+              <div class="map-world" id="map-world">
+                <img class="radar-image" id="radar-image" alt="" hidden>
+                <svg class="map-effects" id="map-effects" viewBox="0 0 1000 1000" aria-label="Траектории выстрелов и гранат"></svg>
+                <div class="player-layer" id="player-layer" role="list" aria-label="Позиции игроков на карте"></div>
+                <div class="map-shapes" id="map-shapes" aria-hidden="true"></div>
+                <span class="site-marker a">A</span><span class="site-marker b">B</span>
+                <span class="route one"></span><span class="route two"></span>
+                <div class="map-center-copy"><b id="map-copy-title">Anubis</b><small>Стилизованная схема карты без координат игрового сервера.</small></div>
+              </div>
+              <div class="round-hud" aria-live="polite">
+                <span><small>РАУНД · ДЕМО</small><b id="round-clock">0:00</b></span>
+                <span><small>БОМБА · ВЗРЫВ</small><b id="bomb-clock">—</b><small id="bomb-defuse-label" hidden>ДЕФУЗ</small><b id="bomb-defuse-clock" hidden>—</b></span>
+                <span><small>ШАНС · ДЕМО</small><b id="round-chance">50%</b></span>
+              </div>
+              <span class="map-demo-badge">Демонстрационный сценарий · не live-данные</span>
             </div>
             <section class="kill-log" aria-label="Лог карты и убийств">
               <h3>Лог карты / Kill log</h3>
               <div id="map-log"></div>
             </section>
+          </div>
+          <div class="round-console" aria-label="Управление повтором раунда">
+            <div class="round-console-actions">
+              <button class="round-control primary" id="round-play" type="button" aria-label="Воспроизвести раунд">▶</button>
+              <button class="round-control" id="round-reset" type="button" aria-label="С начала">↺</button>
+              <label class="round-speed">Раунд <select id="round-select" aria-label="Выбрать раунд"><option value="1">1</option></select></label>
+              <button class="round-control" id="map-follow" type="button" aria-pressed="false">◎ Выбрать игрока</button>
+              <label class="round-speed">Скорость <select id="round-speed"><option value="1">1×</option><option value="1.5">1.5×</option><option value="2">2×</option></select></label>
+              <time id="round-time-readout">0:00 / 1:00</time>
+            </div>
+            <input id="round-seek" type="range" min="0" max="60" step="0.25" value="0" aria-label="Позиция в повторе раунда">
+            <p class="round-console-hint" id="round-console-hint">Нажмите на игрока, чтобы закрепить камеру и приблизить его. Координаты и события в этом примере демонстрационные.</p>
           </div>
         </section>
 
@@ -159,9 +195,48 @@
     <section class="app-view news-view" id="news-view" aria-labelledby="news-title" hidden>
       <header class="view-hero">
         <div><span class="eyebrow">CS2 newsroom</span><h2 id="news-title">Новости</h2><p>Новости команд, турниров и обновлений CS2.</p></div>
-        <button class="primary-button" id="add-news-button" type="button">Добавить новость</button>
+        <button class="primary-button admin-only" id="add-news-button" type="button">Добавить новость</button>
       </header>
       <div class="news-grid" id="news-grid" aria-live="polite"></div>
+    </section>
+
+    <section class="app-view players-view" id="tab-players" aria-labelledby="players-title" hidden>
+      <header class="view-hero"><div><span class="eyebrow">Player directory</span><h2 id="players-title">Игроки</h2><p id="players-count">Всего: 0 игроков</p></div><div class="players-export-actions"><button class="secondary-button" id="players-export" type="button">Экспорт JSON</button><label class="secondary-button import-button" for="players-import">Импорт JSON</label><input id="players-import" type="file" accept="application/json,.json" hidden></div></header>
+      <section class="players-toolbar" aria-label="Поиск и фильтры игроков">
+        <label class="players-search"><span class="sr-only">Поиск по никнейму или SteamID</span><input id="players-search" type="search" placeholder="Поиск по никнейму или SteamID…"></label>
+        <label><span class="sr-only">Команда</span><select id="players-team"><option value="">Все команды</option></select></label>
+        <label><span class="sr-only">Роль</span><select id="players-role"><option value="">Все роли</option><option>AWPer</option><option>Rifler</option><option>IGL</option><option>Support</option></select></label>
+        <label><span class="sr-only">Привязка SteamID</span><select id="players-steam-filter"><option value="">Все</option><option value="linked">С привязанным SteamID</option><option value="unlinked">Без SteamID</option></select></label>
+        <label><span class="sr-only">Сортировка игроков</span><select id="players-sort"><option value="nickname">Никнейм (A–Z)</option><option value="rating">Рейтинг HLTV</option><option value="createdAt">Дата добавления</option></select></label>
+      </section>
+      <p class="players-message" id="players-message" role="status" aria-live="polite" hidden></p>
+      <div class="players-table-wrap"><table class="players-table"><thead><tr><th scope="col">Игрок</th><th scope="col">Команда</th><th scope="col">Роль</th><th scope="col">SteamID</th><th scope="col">HLTV рейтинг</th><th scope="col">Действия</th></tr></thead><tbody id="players-table-body"></tbody></table></div>
+      <nav class="players-pagination" id="players-pagination" aria-label="Страницы списка игроков"></nav>
+    </section>
+
+    <!-- Управление ролями доступно только root и admin. -->
+    <section class="app-view users-view" id="users-view" aria-labelledby="users-title" hidden>
+      <header class="view-hero">
+        <div><span class="eyebrow">Управление доступом</span><h2 id="users-title">Пользователи</h2><p>Назначайте роли зарегистрированным пользователям по email.</p></div>
+        <span class="access-badge">Root / Admin</span>
+      </header>
+      <div class="users-layout">
+        <form class="settings-card role-form" id="role-form">
+          <div><span class="eyebrow">Назначение роли</span><h3>Изменить права пользователя</h3></div>
+          <label for="role-email">Email пользователя</label>
+          <input id="role-email" name="email" type="email" autocomplete="off" required placeholder="user@example.com">
+          <label for="role-select">Новая роль</label>
+          <select id="role-select" name="role" required></select>
+          <p class="role-hint" id="role-hint"></p>
+          <p class="form-error" id="role-error" role="alert" hidden></p>
+          <p class="form-success" id="role-success" role="status" hidden></p>
+          <button class="primary-button" type="submit">Сохранить роль</button>
+        </form>
+        <section class="settings-card users-card" aria-labelledby="users-list-title">
+          <div class="settings-card-head"><div><span class="eyebrow">Аккаунты</span><h3 id="users-list-title">Зарегистрированные пользователи</h3></div></div>
+          <div class="users-list" id="users-list"></div>
+        </section>
+      </div>
     </section>
 
     <!-- Root/admin-only CS2 Game State Integration settings. -->
@@ -174,6 +249,31 @@
         </div>
         <span class="access-badge">Root / Admin</span>
       </header>
+
+      <section class="settings-card demo-import-card" aria-labelledby="demo-import-title">
+        <div class="settings-card-head">
+          <div><span class="eyebrow">CS2 Demo parser</span><h3 id="demo-import-title">Импорт демо в матч</h3></div>
+          <span class="access-badge">Root / Admin</span>
+        </div>
+        <p>Выберите матч и карту серии для одного .dem. Чтобы добавить все карты BO3/BO5, загрузите ZIP со всеми демками и включите соответствующий флажок. Можно вставить прямую HTTPS-ссылку на файл демо.</p>
+        <form id="demo-import-form" class="demo-import-form">
+          <div class="demo-import-fields">
+            <div><label for="demo-match-select">Матч на сайте</label><select id="demo-match-select" required></select></div>
+            <div class="demo-map-selection"><label for="demo-map-select">Карта матча</label><select id="demo-map-select" required></select><label class="demo-all-maps"><input id="demo-all-maps" type="checkbox"> Добавить демки ко всем картам серии</label></div>
+            <div><label for="demo-url-input">Ссылка на демо</label><input id="demo-url-input" type="url" placeholder="https://…/match.dem или match.zip" autocomplete="url"></div>
+            <div class="demo-file-field"><label for="demo-file-input">Файл .dem / .zip</label><input id="demo-file-input" type="file" accept=".dem,.zip,application/zip,application/octet-stream"><span id="demo-file-name" class="demo-file-name">Файл не выбран</span></div>
+          </div>
+          <div class="demo-import-actions"><button class="primary-button" id="demo-import-submit" type="submit">Разобрать и загрузить на сайт</button><span id="demo-import-status" data-state="info" aria-live="polite">Парсер заполнит карту, события раунда, гранаты и доступную статистику.</span></div>
+        </form>
+        <small>Демо сохраняются локально на сервере: до 1 ГБ для .dem и до 5 ГБ для ZIP. Карты архива сопоставляются с матчем по названию внутри демо.</small>
+      </section>
+
+      <section class="settings-card players-api-card" id="players-api-card" aria-labelledby="hltv-api-title">
+        <div><span class="eyebrow">Источник статистики</span><h3 id="hltv-api-title">HLTV API</h3><p>Запросы идут через прокси, не чаще одного раза в 2 секунды и максимум 10 в минуту.</p></div>
+        <label>HLTV proxy URL<input id="hltv-proxy-url" type="url" value="https://corsproxy.io/?url="></label>
+        <label>Задержка между запросами (мс)<input id="hltv-delay" type="number" min="2000" step="100" value="2000"></label>
+        <div class="players-api-actions"><button class="secondary-button" id="hltv-test" type="button">Проверить</button><button class="secondary-button" id="hltv-clear-cache" type="button">Очистить кеш HLTV</button><span id="hltv-api-status" role="status" aria-live="polite"></span></div>
+      </section>
 
       <div class="gsi-layout">
         <form class="settings-card gsi-form" id="gsi-form">
@@ -222,6 +322,11 @@
     </section>
   </main>
 
+  <div class="modal-backdrop" id="steam-bind-modal" role="dialog" aria-modal="true" aria-labelledby="steam-bind-title" hidden>
+    <form class="modal-card players-modal" id="steam-bind-form"><header class="modal-head"><div><span class="eyebrow">Steam profile</span><h2 id="steam-bind-title">Привязка SteamID</h2></div><button class="modal-close" type="button" data-close-players-modal aria-label="Закрыть">×</button></header><div class="players-modal-body"><label for="steam-id-input">SteamID64, SteamID32, SteamID3 или ссылка на профиль</label><input id="steam-id-input" autocomplete="off" placeholder="76561198034202222 или https://steamcommunity.com/id/s1mple" required><p class="role-hint">SteamID64 хранится как строка. Для vanity URL статистика HLTV может не подтянуться автоматически.</p><div class="steam-profile-preview" id="steam-profile-preview" hidden></div><p class="form-error" id="steam-bind-error" role="alert" hidden></p><p class="form-success" id="steam-bind-success" role="status" hidden></p></div><footer class="modal-actions"><button class="secondary-button" id="steam-check" type="button">Проверить</button><button class="secondary-button" type="button" data-close-players-modal>Отмена</button><button class="primary-button" id="steam-save" type="submit" disabled>Сохранить</button></footer></form>
+  </div>
+  <div class="modal-backdrop" id="player-profile-modal" role="dialog" aria-modal="true" aria-labelledby="player-profile-title" hidden><article class="modal-card players-modal"><header class="modal-head"><div><span class="eyebrow">Профиль игрока</span><h2 id="player-profile-title"></h2></div><button class="modal-close" type="button" data-close-players-modal aria-label="Закрыть">×</button></header><div class="players-modal-body" id="player-profile-content"></div></article></div>
+
   <!-- News editor modal -->
   <div class="modal-backdrop" id="news-modal" role="dialog" aria-modal="true" aria-labelledby="news-modal-title" hidden>
     <section class="modal-card">
@@ -247,12 +352,16 @@
         <input id="news-title-input" name="title" type="text" maxlength="120" required>
         <label for="news-text-input">Текст новости</label>
         <textarea id="news-text-input" name="text" maxlength="1000" required></textarea>
-        <label for="news-image-input">URL картинки</label>
-        <input id="news-image-input" name="imageUrl" type="url" placeholder="https://example.com/image.jpg">
+        <label for="news-image-input">Ссылки на изображения</label>
+        <textarea id="news-image-input" name="imageUrls" rows="3" placeholder="По одной ссылке в строке"></textarea>
+        <label for="news-image-files">Изображения с компьютера</label>
+        <input id="news-image-files" type="file" accept="image/*" multiple>
+        <small class="upload-hint">Можно выбрать до 10 изображений. Они сохранятся локально в браузере.</small>
+        <div class="media-preview-list" id="news-media-preview" aria-live="polite" hidden></div>
         <input id="news-published-at" name="publishedAt" type="hidden">
         <input id="news-source-url" name="sourceUrl" type="hidden">
         <article class="telegram-preview" id="telegram-preview" aria-label="Предпросмотр новости" hidden>
-          <img id="telegram-preview-image" alt="" referrerpolicy="no-referrer">
+          <div class="telegram-preview-images" id="telegram-preview-images"></div>
           <div><span class="eyebrow">Предпросмотр · Telegram</span><time id="telegram-preview-date"></time><h3 id="telegram-preview-title"></h3><p id="telegram-preview-text"></p></div>
         </article>
         <p class="form-error" id="news-form-error" role="alert" hidden></p>
@@ -260,21 +369,37 @@
       </form>
     </section>
   </div>
+  <div class="modal-backdrop" id="news-detail-modal" role="dialog" aria-modal="true" aria-labelledby="news-detail-title" hidden><article class="modal-card news-detail-card"><button class="modal-close detail-close" type="button" aria-label="Закрыть">×</button><div id="news-detail-content"></div></article></div>
+  <div class="modal-backdrop" id="delete-confirm-modal" role="alertdialog" aria-modal="true" aria-labelledby="delete-confirm-title" hidden><section class="modal-card confirm-card"><h2 id="delete-confirm-title">Удалить новость?</h2><p>Вы уверены, что хотите удалить эту новость? Действие необратимо.</p><div class="modal-actions"><button class="secondary-button" id="cancel-delete" type="button">Отмена</button><button class="primary-button" id="confirm-delete" type="button">Удалить</button></div></section></div>
 
   <script src="js/services/auth-api.js"></script>
   <script src="js/auth.js"></script>
+  <script src="js/router.js"></script>
   <script src="js/data/hltv-match-data.js"></script>
+  <script src="js/data/player-enrichment.js"></script>
   <script src="js/services/matches-api.js"></script>
+  <script src="js/services/demo-api.js"></script>
   <script src="js/services/news-api.js"></script>
   <script src="js/data/match-data.js"></script>
   <script src="js/data/analytics-data.js"></script>
   <script src="js/config/radar-config.js"></script>
   <script src="js/data/mock-map-coordinates.js"></script>
+  <script src="js/components/equipment.js"></script>
   <script src="js/components/minimap.js"></script>
+  <script src="js/components/map-navigation.js"></script>
+  <script src="js/components/dds-radar.js"></script>
+  <script src="js/components/round-replay.js"></script>
   <script src="js/views/match-view.js"></script>
+  <script src="js/demo-importer.js"></script>
   <script src="js/views/analytics-view.js"></script>
   <script src="js/matches.js"></script>
   <script src="js/news.js"></script>
+  <script src="js/steam.js"></script>
+  <script src="js/hltv.js"></script>
+  <script src="js/player-identity.js"></script>
+  <script src="js/players.js"></script>
+  <script src="js/home.js"></script>
+  <script src="js/users.js"></script>
   <script src="js/gsi-generator.js"></script>
   <script src="js/main.js"></script>
 </body>

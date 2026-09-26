@@ -26,21 +26,33 @@
   }
 
   function write(items) {
-    try { storage()?.setItem(STORAGE_KEY, JSON.stringify(items)); } catch { /* memoryless fallback */ }
+    try { storage()?.setItem(STORAGE_KEY, JSON.stringify(items)); }
+    catch { throw new Error('Не удалось сохранить изображения: хранилище браузера переполнено'); }
+  }
+
+  function normalize(item) {
+    const imageUrls = Array.isArray(item.imageUrls)
+      ? item.imageUrls.filter(Boolean)
+      : item.imageUrl ? [item.imageUrl] : [];
+    return { ...item, imageUrls, imageUrl:imageUrls[0] || '' };
   }
 
   async function list() {
-    return read().map((item) => ({ ...item }));
+    return read().map((item) => normalize(item));
   }
 
   async function create(payload) {
     const publishedDate = payload.publishedAt ? new Date(payload.publishedAt) : new Date();
     const safeDate = Number.isNaN(publishedDate.getTime()) ? new Date() : publishedDate;
+    const imageUrls = Array.isArray(payload.imageUrls)
+      ? [...new Set(payload.imageUrls.map((url) => String(url || '').trim()).filter(Boolean))]
+      : String(payload.imageUrl || '').trim() ? [String(payload.imageUrl).trim()] : [];
     const item = {
       id:`news-${Date.now()}`,
       title:String(payload.title).trim(),
       text:String(payload.text).trim(),
-      imageUrl:String(payload.imageUrl || '').trim() || 'assets/news/default.svg',
+      imageUrls,
+      imageUrl:imageUrls[0] || '',
       date:new Intl.DateTimeFormat('ru-RU', { day:'numeric', month:'long', year:'numeric' }).format(safeDate),
       publishedAt:safeDate.toISOString(),
       source:payload.source || 'manual',
@@ -49,6 +61,13 @@
     const items = [item, ...read()];
     write(items);
     return { ...item };
+  }
+
+  async function remove(id) {
+    // TODO: заменить на fetch(`/api/news/${id}`, { method:'DELETE' })
+    const items = read().filter((item) => String(item.id) !== String(id));
+    write(items);
+    return items.length;
   }
 
   let lastTelegramRequestAt = 0;
@@ -86,5 +105,5 @@
     return { ...payload, text:payload.content || '', sourceType:'telegram' };
   }
 
-  return { list, create, parseTelegram, STORAGE_KEY };
+  return { list, create, remove, parseTelegram, STORAGE_KEY };
 });

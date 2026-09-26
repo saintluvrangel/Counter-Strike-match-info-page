@@ -61,12 +61,12 @@
     if (initialized) return;
     initialized = true;
     onSelect = options.onSelect || onSelect;
-    document.getElementById('matches-grid').addEventListener('click', (event) => {
+    for (const grid of [document.getElementById('matches-grid'), document.getElementById('home-matches-grid')]) grid.addEventListener('click', (event) => {
       const trigger = event.target.closest('[data-match-id]');
       if (trigger) onSelect(trigger.dataset.matchId);
     });
     document.getElementById('analytics-toggle').addEventListener('click', toggleAnalytics);
   }
 
-  root.Matches = { init, renderList, showDetail, collapseAnalytics };
+  root.Matches = { init, renderList, showDetail, collapseAnalytics, card, async getCards(limit) { const items = await api.list(); return items.slice(0, limit).map(card).join(''); } };
 })(window);

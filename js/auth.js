@@ -2,14 +2,17 @@
   'use strict';
 
   const api = root.AuthApi;
-  const storage = root.sessionStorage;
+  const sessionStorage = root.sessionStorage;
+  const userStorage = root.localStorage;
   const permissions = Object.freeze({
-    root:['matches', 'match', 'news', 'news_manage', 'gsi', 'edit'],
-    admin:['matches', 'match', 'news', 'news_manage', 'gsi', 'edit'],
-    media_editor:['matches', 'match', 'news', 'news_manage']
+    root:['matches', 'match', 'news', 'players', 'players_bind', 'players_edit', 'hltv_refresh', 'news_manage', 'users_manage', 'gsi', 'edit'],
+    admin:['matches', 'match', 'news', 'players', 'players_bind', 'players_edit', 'hltv_refresh', 'news_manage', 'users_manage', 'gsi', 'edit'],
+    media_editor:['matches', 'match', 'news', 'players', 'players_bind', 'hltv_refresh', 'news_manage'],
+    user:['matches', 'match', 'news', 'players']
   });
-  const roleLabels = Object.freeze({ root:'Root', admin:'Administrator', media_editor:'Media editor' });
-  let currentUser = api.readSession(storage);
+  const roleLabels = Object.freeze({ root:'Root', admin:'Administrator', media_editor:'Media editor', user:'Пользователь' });
+  let currentUser = api.readSession(sessionStorage, userStorage);
+  let preview = false;
 
   function can(permission, user = currentUser) {
     return Boolean(user && permissions[user.role]?.includes(permission));
@@ -20,16 +23,33 @@
   }
 
   async function signIn(email, password) {
-    const user = await api.login(email, password);
-    api.writeSession(storage, user);
+    const user = await api.login(email, password, userStorage);
+    api.writeSession(sessionStorage, user);
     currentUser = user;
     notify();
     return user;
   }
 
+  async function registerUser(email, password) {
+    const user = await api.registerUser(email, password, userStorage);
+    api.writeSession(sessionStorage, user);
+    currentUser = user;
+    notify();
+    return user;
+  }
+
+  function isPreviewMode() { return preview; }
+  function togglePreviewMode(force) {
+    preview = typeof force === 'boolean' ? force : !preview;
+    root.document.body.classList.toggle('preview-mode', preview);
+    root.dispatchEvent(new CustomEvent('preview:change', { detail:{ active:preview } }));
+    return preview;
+  }
+
   function signOut() {
-    api.clearSession(storage);
+    api.clearSession(sessionStorage);
     currentUser = null;
+    togglePreviewMode(false);
     notify();
   }
 
@@ -45,5 +65,15 @@
     return roleLabels[role] || role;
   }
 
-  root.Auth = { signIn, signOut, getUser, can, requireRoute, roleLabel };
+  async function listUsers() {
+    if (!can('users_manage')) throw new Error('Недостаточно прав');
+    return api.listUsers(userStorage);
+  }
+
+  async function assignRole(email, role) {
+    if (!can('users_manage')) throw new Error('Недостаточно прав');
+    return api.assignRole(email, role, currentUser, userStorage);
+  }
+
+  root.Auth = { signIn, registerUser, signOut, getUser, can, requireRoute, roleLabel, listUsers, assignRole, isPreviewMode, togglePreviewMode };
 })(window);

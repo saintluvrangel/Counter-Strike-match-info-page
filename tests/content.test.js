@@ -46,7 +46,9 @@ const NewsApi = require('../js/services/news-api.js');
   await NewsApi.create({ title:'Test title', text:'Test text', imageUrl:'', source:'manual' });
   const news = await NewsApi.list();
   assert.equal(news[0].title, 'Test title');
-  assert.equal(news[0].imageUrl, 'assets/news/default.svg');
+  assert.equal(news[0].imageUrl, '');
+  await NewsApi.remove(news[0].id);
+  assert.equal((await NewsApi.list()).some((item) => item.id === news[0].id), false);
 
   console.log('matches and news tests passed');
 })().catch((error) => {
