@@ -833,7 +833,7 @@
     document.getElementById('ct-title').textContent = match.teamB.name;
     const analyticsDescription = document.querySelector('#match-analytics-panel .analytics-hero p');
     if (analyticsDescription) {
-      analyticsDescription.textContent = `Подтверждённые карты и общая статистика игроков: ${match.teamA.name} — ${match.teamB.name}.`;
+      analyticsDescription.textContent = `${match.teamA.name} — ${match.teamB.name}: форма команд и очные встречи по данным Liquipedia.`;
     }
     root.ActiveMatch = match;
     renderMap();

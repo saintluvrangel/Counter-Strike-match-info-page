@@ -3,7 +3,7 @@
   const routes = { home:'home-view', matches:'matches-view', match:'match-view', news:'news-view', players:'tab-players', users:'users-view', gsi:'gsi-view' };
   const routeLabels = { home:'Главная', matches:'Матчи', news:'Новости', players:'Игроки', users:'Пользователи', gsi:'Настройки API' };
   let initialized = false;
-  function requestedRoute() { const [name, id] = root.location.hash.replace(/^#/, '').split('/'); return { name:name || 'home', id:id || null }; }
+  function requestedRoute() { const [name, id, view] = root.location.hash.replace(/^#/, '').split('/'); return { name:name || 'home', id:id || null, view:view || null }; }
   function renderNavigation(user) {
     const available = ['home', 'matches', 'news', 'players'];
     if (user && !root.Auth.isPreviewMode() && root.Auth.can('users_manage', user)) available.push('users');
@@ -74,7 +74,7 @@
     if (tab === 'players') root.Players.render();
     if (tab === 'users') root.Users.render();
     if (tab === 'matches') root.Matches.renderList();
-    if (tab === 'match') { const req = requestedRoute(); root.Matches.showDetail(req.id || '2379601'); }
+    if (tab === 'match') { const req = requestedRoute(); root.Matches.showDetail(req.id || '2379601', req.view); }
     if (tab === 'gsi') { root.GsiGenerator.init(); root.DemoImporter.init(); }
   });
   renderAuthState();

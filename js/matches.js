@@ -33,10 +33,20 @@
     grid.innerHTML = matches.map(card).join('');
   }
 
-  async function showDetail(matchId) {
-    const match = await api.get(matchId) || await api.get('2398105');
+  async function showDetail(matchId, view) {
+    const match = await api.get(matchId);
+    if (!match) { root.location.hash = '#matches'; return; }
     root.MatchView.loadMatch(match);
+    document.querySelector('h1.sr-only').textContent = `${match.teamA.name} против ${match.teamB.name}`;
+    document.title = `${match.teamA.name} vs ${match.teamB.name} — ${view === 'analytics' ? 'Аналитика' : 'Матч'}`;
     collapseAnalytics();
+    const analytics = view === 'analytics';
+    document.getElementById('match-view').classList.toggle('analytics-route', analytics);
+    document.getElementById('match-analytics-panel').hidden = !analytics;
+    const back = document.querySelector('#match-view .back-link');
+    back.href = analytics ? `#match/${encodeURIComponent(matchId)}` : '#matches';
+    back.textContent = analytics ? '← Назад к матчу' : '← Назад к матчам';
+    if (analytics) root.AnalyticsView.render(matchId);
   }
 
   function collapseAnalytics() {
@@ -48,13 +58,8 @@
   }
 
   function toggleAnalytics() {
-    const panel = document.getElementById('match-analytics-panel');
-    const button = document.getElementById('analytics-toggle');
-    const willOpen = panel.hidden;
-    panel.hidden = !willOpen;
-    button.setAttribute('aria-expanded', String(willOpen));
-    button.classList.toggle('active', willOpen);
-    if (willOpen) root.AnalyticsView.render();
+    const id = root.ActiveMatch?.id;
+    if (id) root.location.hash = `#match/${encodeURIComponent(id)}/analytics`;
   }
 
   function init(options = {}) {

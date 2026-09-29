@@ -1,12 +1,13 @@
 {
   "name": "cs2-info-dashboard",
   "version": "1.0.0",
+  "homepage": "https://github.com/saintluvrangel/Counter-Strike-match-info-page",
   "private": true,
   "description": "CS2 match dashboard with server-side Telegram public preview parsing",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "node tests/minimap.test.js && node tests/auth-gsi.test.js && node tests/content.test.js && node tests/telegram-parser.test.js && node tests/round-replay.test.js && node tests/demo-parser.test.js && node tests/player-identity.test.js && node tests/demo-map-selection.test.js"
+    "test": "node tests/minimap.test.js && node tests/auth-gsi.test.js && node tests/content.test.js && node tests/telegram-parser.test.js && node tests/round-replay.test.js && node tests/demo-parser.test.js && node tests/player-identity.test.js && node tests/demo-map-selection.test.js && node tests/analytics.test.js"
   },
   "dependencies": {
     "@laihoe/demoparser2": "0.42.0",

@@ -12,6 +12,7 @@ const { Worker } = require('node:worker_threads');
 const unzipper = require('unzipper');
 const { fetchTelegramPost, TelegramParserError } = require('./js/telegram-parser.js');
 const matchCatalog = require('./js/data/hltv-match-data.js');
+const { getMatchAnalytics } = require('./lib/analytics.js');
 
 const HOST = '127.0.0.1';
 const PORT = Number(process.env.PORT) || 3000;
@@ -384,7 +385,7 @@ function serveStatic(request, response) {
   const filePath = path.resolve(PROJECT_ROOT, relativePath);
   const relative = path.relative(PROJECT_ROOT, filePath);
   if (relative.startsWith('..') || path.isAbsolute(relative)) return sendJson(response, 403, { message:'Доступ запрещён' });
-  if (relative.split(path.sep).includes('.private-data')) return sendJson(response, 403, { message:'Доступ запрещён' });
+  if (relative.split(path.sep).some((part) => part.startsWith('.')) || ['lib', 'types', 'tests'].includes(relative.split(path.sep)[0]) || relative === 'server.js') return sendJson(response, 403, { message:'Доступ запрещён' });
 
   fs.readFile(filePath, (error, content) => {
     if (error) return sendJson(response, error.code === 'ENOENT' ? 404 : 500, { message:'Файл не найден' });
@@ -399,6 +400,27 @@ const server = http.createServer(async (request, response) => {
     return response.end();
   }
   if (request.method === 'GET' && request.url === '/api/players') return getPlayersRoute(response);
+  const analyticsMatch = request.method === 'GET' && request.url.match(/^\/api\/matches\/([A-Za-z0-9_-]{1,80})\/analytics$/);
+  if (analyticsMatch) {
+    const match = matchCatalog.matches.find((entry) => entry.id === analyticsMatch[1]);
+    if (!match) return sendJson(response, 404, { message:'Матч не найден' });
+    const monthNames = { января:0, февраля:1, марта:2, апреля:3, мая:4, июня:5, июля:6, августа:7, сентября:8, октября:9, ноября:10, декабря:11 };
+    const parts = match.date.match(/^(\d{1,2})\s+(\S+)\s+(\d{4})(?:\s*·\s*(\d{1,2}):(\d{2}))?/);
+    const matchDate = parts && monthNames[parts[2]] !== undefined
+      ? new Date(Date.UTC(Number(parts[3]), monthNames[parts[2]], Number(parts[1]), Number(parts[4] || 0), Number(parts[5] || 0))).toISOString()
+      : undefined;
+    try {
+      const data = await getMatchAnalytics(
+        { id:match.teamA, ...matchCatalog.teams[match.teamA] },
+        { id:match.teamB, ...matchCatalog.teams[match.teamB] },
+        matchDate, match.tournament
+      );
+      return sendJson(response, 200, { matchId:match.id, tournament:match.tournament, matchDate, ...data });
+    } catch (error) {
+      console.error('Analytics error:', error);
+      return sendJson(response, 502, { message:'Не удалось загрузить аналитику Liquipedia' });
+    }
+  }
   if (request.method === 'PUT' && request.url === '/api/players') return savePlayersRoute(request, response);
   if (request.method === 'POST' && request.url === '/api/telegram/parse') return parseTelegramRoute(request, response);
   if (request.method === 'POST' && request.url === '/api/demos/import') return importDemoRoute(request, response);

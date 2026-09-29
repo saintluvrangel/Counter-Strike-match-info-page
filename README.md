@@ -14,10 +14,13 @@ js/config/radar-config.js      — overview-параметры карт
 js/data/match-data.js          — данные текущего матча
 js/data/hltv-match-data.js     — каталог реальных матчей, составы, карты и HLTV-ассеты
 js/data/mock-map-coordinates.js — mock-маршруты T/CT для каждой radar-карты
-js/data/analytics-data.js      — контракт и mock-данные аналитики
+lib/liquipedia.js              — клиент открытого MediaWiki API, очередь и кэш
+lib/mediawiki-matches.js       — разбор таблиц матчей из ответа API
+lib/analytics.js               — нормализация и расчёт аналитики
+types/analytics.ts             — TypeScript-контракты аналитики
 js/components/minimap.js       — преобразование координат и маркеры
 js/views/match-view.js         — компоненты и состояние экрана матча
-js/views/analytics-view.js     — рендер вкладки «Аналитика»
+js/views/analytics-view.js     — отдельный экран аналитики матча
 js/matches.js                  — каталог, detail-routing и аналитика внутри матча
 js/news.js                     — лента и редактор новостей
 js/telegram-parser.js          — серверный парсер публичных Telegram preview
@@ -61,10 +64,17 @@ npm start
 
 ```text
 #matches          — каталог матчей
-#match/{id}       — детальный дашборд и раскрываемая аналитика
+#match/{id}       — детальный дашборд
+#match/{id}/analytics — аналитика матча
 #news             — новости
 #gsi              — GSI/API-настройки для root и admin
 ```
+
+## Liquipedia analytics
+
+Ключ и заявка не нужны: сервер обращается к `https://liquipedia.net/counterstrike/api.php` через `action=query` и `action=parse`. Контакт для User-Agent по умолчанию — URL проекта из `package.json`; при необходимости задайте `LIQUIPEDIA_CONTACT` в `.env`. Браузер обращается только к `/api/matches/{id}/analytics`. Ответы кэшируются в `.private-data/liquipedia-mediawiki-cache` минимум на час. Очередь выдерживает интервал 2 секунды между запросами и 30 секунд между `action=parse` (первое открытие двух ещё не кэшированных страниц может занять более 30 секунд).
+
+Из открытой таблицы `/Matches` берутся дата, соперник, счёт, результат и турнир. Отдельных ссылок на каждый матч, Rating 2.x, K/D, ADR и KAST в этой таблице нет; интерфейс не подставляет их из другого источника. Оценка шансов использует явные веса: 50% последние 10 матчей (с весом свежести), 25% очные встречи, 15% рейтинг, 10% форма на турнире; отсутствующие показатели исключаются, остальные веса нормализуются. Это эвристическая оценка, не букмекерский коэффициент.
 
 Radar assets and overview configuration were extracted from the locally installed game with [Source 2 Viewer](https://s2v.app) ([ValveResourceFormat](https://github.com/ValveResourceFormat/ValveResourceFormat)).
 
